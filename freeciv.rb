@@ -1,16 +1,10 @@
 class Freeciv < Formula
+  desc "A Free and Open Source empire-building strategy game"
   homepage "http://freeciv.wikia.com"
   url "https://downloads.sourceforge.net/project/freeciv/Freeciv%202.5/2.5.0/freeciv-2.5.0.tar.bz2"
   mirror "http://download.gna.org/freeciv/stable/freeciv-2.5.0.tar.bz2"
   sha256 "bd9f7523ea79b8d2806d0c1844a9f48506ccd18276330580319913c43051210b"
-
-  head do
-    url "svn://svn.gna.org/svn/freeciv/trunk"
-    depends_on "automake" => :build
-    depends_on "autoconf" => :build
-    depends_on "gettext" => :build
-    depends_on "libtool" => :build
-  end
+  revision 1
 
   bottle do
     root_url "https://homebrew.bintray.com/bottles-games"
@@ -20,16 +14,21 @@ class Freeciv < Formula
     sha256 "f3a1c6f0606dce6b0a2d9bc7c854867c5be127c6a60eea497189d208d816a35e" => :mountain_lion
   end
 
+  head do
+    url "svn://svn.gna.org/svn/freeciv/trunk"
+    depends_on "automake" => :build
+    depends_on "autoconf" => :build
+    depends_on "gettext" => :build
+    depends_on "libtool" => :build
+  end
+
   option "without-nls", "Disable NLS support"
   option "without-sdl", "Disable the SDL Freeciv client"
-  option "without-gtk+", "Disable the GTK+ Freeciv client"
-  option "with-gtk+3", "Enable the GTK+3 Freeciv client"
 
   depends_on "gettext" if build.with? "nls"
   depends_on "icu4c"
   depends_on "pkg-config" => :build
   depends_on "readline"
-  depends_on :x11
 
   depends_on "sdl" => :recommended
   if build.with? "sdl"
@@ -40,14 +39,7 @@ class Freeciv < Formula
     depends_on "sdl_ttf"
   end
 
-  depends_on "gtk+" => :recommended
-  depends_on "gtk+3" => :optional
-  if build.with?("gtk+") || build.with?("gtk+3")
-    depends_on "atk"
-    depends_on "glib"
-    depends_on "pango"
-  end
-  depends_on "gdk-pixbuf" if build.with? "gtk+3"
+  depends_on "gtk+3" => :recommended
 
   def install
     args = %W[
