@@ -1,9 +1,8 @@
-require "formula"
-
 class Pioneers < Formula
+  desc "A Settlers of Catan clone"
   homepage "http://pio.sourceforge.net/"
-  url "https://downloads.sourceforge.net/project/pio/Source/pioneers-15.1.tar.gz"
-  sha1 "cea94cd77edef31b3f9e601077dff9b199dfeaf4"
+  url "https://downloads.sourceforge.net/project/pio/Source/pioneers-15.3.tar.gz"
+  sha256 "69afa51b71646565536b571b0f89786d3a7616965265f196fd51656b51381a89"
 
   fails_with :clang do
     build 318
@@ -13,10 +12,8 @@ class Pioneers < Formula
   depends_on "pkg-config" => :build
   depends_on "intltool" => :build
   depends_on "gettext"
-  depends_on "gtk+"
-  depends_on "gdk-pixbuf"
+  depends_on "gtk+3"
   depends_on "librsvg" # svg images for gdk-pixbuf
-  depends_on "hicolor-icon-theme"
 
   def install
     # fix usage of echo options not supported by sh
@@ -30,6 +27,15 @@ class Pioneers < Formula
 
     system "./configure", "--disable-debug", "--disable-dependency-tracking",
                           "--prefix=#{prefix}"
-    system "make install"
+    system "make", "install"
+  end
+
+  test do
+    system "#{bin}/pioneers-editor", "--help"
+    server = fork do
+      system "#{bin}/pioneers-server-console"
+    end
+    sleep 5
+    Process.kill("TERM", server)
   end
 end
